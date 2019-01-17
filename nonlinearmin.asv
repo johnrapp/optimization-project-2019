@@ -1,0 +1,28 @@
+function [] = nonlinearmin(f, start, method, tol, printout)
+
+if method == "DFP"
+    update_matrix = update_DFP;
+elseif method == "BFGS"
+    update_matrix = update_BFGS;
+end
+
+n = 3;
+
+y = start;
+D = eye(n);
+for j = 1:n
+    d = -D*grad(f, y);
+    [lambda, No_of_iterations] = linesearch(f, y, d);
+    next_y = y + lambda*d;
+    D = update_matrix(D, lambda, d, y, next_y);
+    
+    y = next_y;
+    
+end
+
+function method = update_DFP
+method = 'DFP';
+end
+function method = update_BFGS
+method = 'BFGS';
+end
