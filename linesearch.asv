@@ -4,7 +4,10 @@ function [lambda, No_of_iterations] = linesearch(func, x, d)
     
     a_0 = 0;
     b_0 = 1.0e+10;
-    tol = 1.0e-60;
+    tol = 1.0e-8;
+    
+    %b_0 = 1.0e+10;
+    %tol = 1.0e-60;
     
     [a, b, No_of_iterations] = golden_section(f, a_0, b_0, tol);
     
@@ -21,32 +24,25 @@ function [a, b, No_of_iterations] = golden_section(F, a_0, b_0, tol)
     a = a_0;
     b = b_0;
     
+    reuse_lambda = false;
+    reuse_mu = false;
+    
     No_of_iterations = 0;
 
-    lambda = a + (1 - alpha)*(b - a);
-    f_lambda = F(lambda);
-    mu = a + alpha*(b - a);
-    f_mu = F(mu);
-    reuse_lambda = true;
-    reuse_mu = true;
-    
-    %TODO fix this
     while abs(a - b) >= tol
         No_of_iterations = No_of_iterations + 1;
         
+        if (abs(a-b) < 1e-5)
+            i = 0;
+        end
+        
         if not(reuse_lambda)
-            next_lambda = a + (1 - alpha)*(b - a);
-            if (lambda == next_lambda)
-                break;
-            end
-            lambda = next_lambda;
+            lambda = a + (1 - alpha)*(b - a);
             f_lambda = F(lambda);
         end
         if not(reuse_mu)
             next_mu = a + alpha*(b - a);
-            if (mu == next_mu)
-                break;
-            end
+            if (mu == next_
             mu = next_mu;
             f_mu = F(mu);
         end
