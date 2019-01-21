@@ -2,67 +2,59 @@ function [lambda, No_of_iterations] = linesearch(func, x, d)
 
     f = @(lambda) func(x + lambda * d);
     
-    a_0 = 0;
-    b_0 = 1.0e+10;
-    tol = 1.0e-8;
-    
-    %b_0 = 1.0e+10;
-    %tol = 1.0e-60;
-    
-    [a, b, No_of_iterations] = golden_section(f, a_0, b_0, tol);
-    
-    lambda = (a + b) / 2;
+    [lambda, No_of_iterations] = armijo(f);
     
     if isnan(func(x+lambda*d)) || func(x+lambda*d) > func(x)
         error('Bad job of the line search!')
     end
 end
 
-function [a, b, No_of_iterations] = golden_section(F, a_0, b_0, tol)
-    alpha = (sqrt(5) - 1) / 2;
- 
-    a = a_0;
-    b = b_0;
-    
-    reuse_lambda = false;
-    reuse_mu = false;
-    
-    No_of_iterations = 0;
+function [lambda, No_of_iterations] = armijo(F)
 
-    while abs(a - b) >= tol
+    beta = 2;
+    epsilon = 0.1;
+    
+    lambda_0 = 1;
+    alpha = 2;
+    
+    lambda = lambda_0;
+
+    F_0 = F(0);
+    derivative_0 = derivative(F, 0);
+
+    T = @(lambda) F_0 + epsilon*lambda*derivative_0;
+
+    No_of_iterations = 0;
+    
+    while 1
         No_of_iterations = No_of_iterations + 1;
         
-        if (abs(a-b) < 1e-5)
-            i = 0;
+        below_tangent = F(lambda) <= T(lambda);
+        too_small = F(alpha*lambda) <= T(alpha*lambda);
+
+        if below_tangent && not(too_small)
+            break;
         end
-        
-        if not(reuse_lambda)
-            lambda = a + (1 - alpha)*(b - a);
-            f_lambda = F(lambda);
+
+        if not(below_tangent)
+            lambda = lambda / beta;
+        elseif too_small
+            lambda = lambda * beta;
         end
-        if not(reuse_mu)
-            next_mu = a + alpha*(b - a);
-            if (mu == next_
-            mu = next_mu;
-            f_mu = F(mu);
-        end
-        
-        if f_lambda > f_mu
-            % Case 1
-            a = lambda;
-            
-            reuse_lambda = true;
-            reuse_mu = false;
-            lambda = mu;
-            f_lambda = f_mu;
-        else
-            % Case 2
-            b = mu;
-            
-            reuse_mu = true;
-            reuse_lambda = false;
-            mu = lambda;
-            f_mu = f_lambda;
-        end
+
     end
+
+end
+
+function dy = derivative(F, x)
+    for j = 1:length(x)
+xplus = x;
+xminus = x;
+xplus(j) = x(j) + 1.e-8;
+xminus(j) = x(j) - 1.e-8;
+fplus = feval(F,xplus);
+fminus = feval(F,xminus);
+g(j,1) = ( fplus - fminus )/2.e-8;
+    end
+
 end

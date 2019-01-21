@@ -1,5 +1,7 @@
 function [x, No_of_iterations] = nonlinearmin(f, start, method, tol, printout)
 
+%TODO printout
+
 if method == "DFP"
     update_matrix = @update_DFP;
 elseif method == "BFGS"

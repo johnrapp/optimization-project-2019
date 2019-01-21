@@ -2,71 +2,55 @@ function [lambda, No_of_iterations] = linesearch(func, x, d)
 
     f = @(lambda) func(x + lambda * d);
     
-    a_0 = 0;
-    b_0 = 1.0e+10;
-    tol = 1.0e-60;
-    
-    [a, b, No_of_iterations] = golden_section(f, a_0, b_0, tol);
-    
-    lambda = (a + b) / 2;
+    [lambda, No_of_iterations] = armijo(f);
     
     if isnan(func(x+lambda*d)) || func(x+lambda*d) > func(x)
         error('Bad job of the line search!')
     end
 end
 
-function [a, b, No_of_iterations] = golden_section(F, a_0, b_0, tol)
-    alpha = (sqrt(5) - 1) / 2;
- 
-    a = a_0;
-    b = b_0;
-    
-    No_of_iterations = 0;
+function [lambda, No_of_iterations] = armijo(F)
 
-    lambda = a + (1 - alpha)*(b - a);
-    f_lambda = F(lambda);
-    mu = a + alpha*(b - a);
-    f_mu = F(mu);
-    reuse_lambda = true;
-    reuse_mu = true;
+    beta = 2;
+    epsilon = 0.1;
     
-    %TODO fix this
-    while abs(a - b) >= tol
+    lambda_0 = 1;
+    alpha = 2;
+    
+    lambda = lambda_0;
+
+    F_0 = F(0);
+    derivative_0 = derivative(F, 0);
+
+    %if (derivative_0 > 0)
+    %    derivative_0 = 0;
+    %end
+
+    T = @(lambda) F_0 + epsilon*lambda*derivative_0;
+
+    No_of_iterations = 0;
+    
+    while 1
         No_of_iterations = No_of_iterations + 1;
         
-        if not(reuse_lambda)
-            next_lambda = a + (1 - alpha)*(b - a);
-            if (lambda == next_lambda)
-                break;
-            end
-            lambda = next_lambda;
-            f_lambda = F(lambda);
+        below_tangent = F(lambda) <= T(lambda);
+        too_small = F(alpha*lambda) <= T(alpha*lambda);
+
+        if below_tangent && not(too_small)
+            break;
         end
-        if not(reuse_mu)
-            next_mu = a + alpha*(b - a);
-            if (mu == next_mu)
-                break;
-            end
-            mu = next_mu;
-            f_mu = F(mu);
+
+        if not(below_tangent)
+            lambda = lambda / beta;
+        elseif too_small
+            lambda = lambda * beta;
         end
-        
-        if f_lambda > f_mu
-            % Case 1
-            a = lambda;
-            
-            reuse_lambda = true;
-            reuse_mu = false;
-            lambda = mu;
-            f_lambda = f_mu;
-        else
-            % Case 2
-            b = mu;
-            
-            reuse_mu = true;
-            reuse_lambda = false;
-            mu = lambda;
-            f_mu = f_lambda;
-        end
+
     end
+
+end
+
+function dy = derivative(F, x)
+    h = 1.e-60;
+    dy = (F(x+h) - F(x-h))/(2*h);
 end
