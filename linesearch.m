@@ -4,8 +4,10 @@ function [lambda, No_of_iterations] = linesearch(func, x, d)
     
     [lambda, No_of_iterations] = armijo(f);
     
-    if isnan(func(x+lambda*d)) || func(x+lambda*d) > func(x)
-        error('Bad job of the line search!')
+    if isnan(func(x+lambda*d))
+        error('Line search is NaN!')
+    elseif func(x+lambda*d) > func(x)
+        error('Line search did no good!')
     end
 end
 
@@ -44,6 +46,10 @@ function [lambda, No_of_iterations] = armijo(F)
             lambda = lambda / beta;
         elseif too_small
             lambda = lambda * beta;
+        end
+        
+        if No_of_iterations > 1000
+            error('Too long time in line search!')
         end
 
     end

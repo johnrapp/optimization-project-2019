@@ -4,7 +4,9 @@ function [lambda, No_of_iterations] = linesearch(func, x, d)
     
     [lambda, No_of_iterations] = armijo(f);
     
-    if isnan(func(x+lambda*d)) || func(x+lambda*d) > func(x)
+    if isnan(func(x+lambda*d))
+        error('line search!')
+    elseif func(x+lambda*d) > func(x)
         error('Bad job of the line search!')
     end
 end
@@ -21,6 +23,10 @@ function [lambda, No_of_iterations] = armijo(F)
 
     F_0 = F(0);
     derivative_0 = derivative(F, 0);
+
+    %if (derivative_0 > 0)
+    %    derivative_0 = 0;
+    %end
 
     T = @(lambda) F_0 + epsilon*lambda*derivative_0;
 
@@ -41,20 +47,16 @@ function [lambda, No_of_iterations] = armijo(F)
         elseif too_small
             lambda = lambda * beta;
         end
+        
+        if No_of_iterations > 1000
+            error('Too long time in linesearch!')
+        end
 
     end
 
 end
 
 function dy = derivative(F, x)
-    for j = 1:length(x)
-xplus = x;
-xminus = x;
-xplus(j) = x(j) + 1.e-8;
-xminus(j) = x(j) - 1.e-8;
-fplus = feval(F,xplus);
-fminus = feval(F,xminus);
-g(j,1) = ( fplus - fminus )/2.e-8;
-    end
-
+    h = 1.e-60;
+    dy = (F(x+h) - F(x-h))/(2*h);
 end
