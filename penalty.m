@@ -8,6 +8,7 @@ function penalty = penalty(f, g_k, h_k, mu)
 end
 
 function val = values(g_k, x)
+    val(1) = 0;
     for i = 1:numel(g_k)
         g = g_k{i};
         val(i) = g(x);
