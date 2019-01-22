@@ -1,9 +1,9 @@
-function penalty = penalty(f, g_k, mu)
+function penalty = penalty(f, g_k, h_k, mu)
 
     function q = q(x)
-        q = f(x) + mu * penalty_general(g_k, x);
+        q = f(x) + mu * penalty_general(g_k, h_k, x);
     end
-    
+
     penalty = @q;
 end
 
@@ -14,11 +14,9 @@ function val = values(g_k, x)
     end
 end
 
-function alpha = penalty_general(g_k, x)
-    val = values(g_k, x)
+function alpha = penalty_general(g_k, h_k, x)
+    alpha_g = max(values(g_k, x), 0).^2;
+    alpha_h = values(h_k, x).^2;
     
-    val = max(val, 0)
-    val = val.^2;
-    
-    alpha = sum(val);
+    alpha = sum(alpha_g) + sum(alpha_h);
 end
