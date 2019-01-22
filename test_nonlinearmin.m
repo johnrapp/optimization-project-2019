@@ -20,5 +20,8 @@ func(x)
 %% Test DFP Rosenbrock
 
 func = @rosenbrock;
-x = nonlinearmin(func,[0;0],'DFP',1e-6,0)
+[x, No_of_iterations] = nonlinearmin(func,[0;0],'DFP',1e-6,0)
+func(x)
+
+[x, No_of_iterations] = nonlinearmin(func,[200;200],'DFP',1e-6,0)
 func(x)

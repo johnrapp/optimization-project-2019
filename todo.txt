@@ -1,0 +1,14 @@
+-- Testa på Rosenbrock
+-- nonlinearmin barrier
+-- Deras barrierexempel
+-- Exercise 9.3
+-- Exercise 9.5
+
+-- Skriva rapport
+
+-- Printout i nonlinearmin
+-- Cleana upp tester
+
+Kanske
+- Positiva derivator i Armijo
+- Förhindra division med 0 i Armijo

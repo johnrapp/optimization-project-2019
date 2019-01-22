@@ -40,7 +40,7 @@ if isnan(f(x)) || f(x) > f(start)
     error('Bad job of the search!')
 end
 
-indiana_jones();
+%indiana_jones();
 
 end
 
