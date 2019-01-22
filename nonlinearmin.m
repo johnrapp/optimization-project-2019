@@ -18,18 +18,18 @@ x = start;
 No_of_iterations = 0;
 
 while 1
-No_of_iterations = No_of_iterations + 1;
+    No_of_iterations = No_of_iterations + 1;
 
-y = x;
-D = eye(n);
-for j = 1:n
-    d = -D*grad(f, y);
-    lambda = linesearch(f, y, d);
-    next_y = y + lambda*d;
-    D = update_matrix(f, D, lambda, d, y, next_y);
-    
-    y = next_y;
-end
+    y = x;
+    D = eye(n);
+    for j = 1:n
+        d = -D*grad(f, y);
+        lambda = linesearch(f, y, d);
+        next_y = y + lambda*d;
+        D = update_matrix(f, D, lambda, d, y, next_y);
+
+        y = next_y;
+    end
     x_next = next_y;
     
     if should_stop(f, x, x_next, tol)
