@@ -8,6 +8,8 @@ g_k = {}
 
 h_k{1} = @(x) x(1)^2 + x(2)^2 - 1;
 
-q = penalty(f, g_k, h_k, 1);
+mu = 1;
+
+q = penalty(f, g_k, h_k, mu);
 
 q([1/sqrt(2);1/sqrt(2)])
