@@ -36,8 +36,8 @@ while 1
         break;
     end
     x = x_next;
-    %xs(No_of_iterations) = x(1);
-    %ys(No_of_iterations) = x(2);
+    xs(No_of_iterations) = x(1);
+    ys(No_of_iterations) = x(2);
     
     if No_of_iterations > 5000
         error('Too long time in minimization!')
@@ -49,7 +49,7 @@ if isnan(f(x)) || f(x) > f(start)
     error('Bad job of the search!')
 end
 
-%plot(xs, ys, '-o');
+plot(xs, ys, '-o');
 
 %indiana_jones();
 
