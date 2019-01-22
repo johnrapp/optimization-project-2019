@@ -18,10 +18,10 @@ plot(ls, 7*10^(1)*(ls >= lambda - 0.1 & ls <= lambda + 0.1))
 hold off
 
 %% Test 2
-lambda_1 = linesearch(@test_func,[0;0],[1;0])
+[lambda_1, No_of_iterations] = linesearch(@test_func,[0;0],[1;0])
 test_func([0;0] + lambda_1*[1;0])
-lambda_2 = linesearch(@test_func,[0;0],[0;1])
+[lambda_2, No_of_iterations] = linesearch(@test_func,[0;0],[0;1])
 test_func([0;0] + lambda_2*[0;1])
 
-lambda_3 = linesearch(@test_func,[lambda_1;0],[0;1])
+[lambda_3, No_of_iterations] = linesearch(@test_func,[lambda_1;0],[0;1])
 test_func([lambda_1;0] + lambda_3*[0;1])

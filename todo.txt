@@ -1,5 +1,5 @@
--- Testa på Rosenbrock
--- nonlinearmin barrier
+-- Testa på Rosenbrock (check!)
+-- nonlinearmin barrier (check!)
 -- Deras barrierexempel
 -- Exercise 9.3
 -- Exercise 9.5

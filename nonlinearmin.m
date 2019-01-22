@@ -36,12 +36,20 @@ while 1
         break;
     end
     x = x_next;
+    xs(No_of_iterations) = x(1);
+    ys(No_of_iterations) = x(2);
+    
+    if No_of_iterations > 5000
+        error('Too long time in minimization!')
+    end
 end
 
 x = x_next;
 if isnan(f(x)) || f(x) > f(start)
     error('Bad job of the search!')
 end
+
+plot(xs, ys, '-o');
 
 %indiana_jones();
 
@@ -62,5 +70,5 @@ function D = update_BFGS(f, D, lambda, d, y, next_y)
 end
 
 function stop = should_stop(f, x, x_next, tol)
-    stop = all(abs(x_next - x) <= tol) || abs(f(x_next) - f(x)) < tol;
+    stop = all(abs(x_next - x) <= tol) || abs(f(x_next) - f(x)) < tol;;
 end
