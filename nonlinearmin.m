@@ -8,6 +8,9 @@ elseif method == "BFGS"
     update_matrix = @update_BFGS;
 end
 
+if printout == 1
+end
+
 n = numel(start);
 
 x = start;
