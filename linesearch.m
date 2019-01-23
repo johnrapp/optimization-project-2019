@@ -76,7 +76,7 @@ function dy = derivative(F, x, suitable_lambda)
     dy = (F(x + h) - F(x - h))/(2*h);
     
     if (isnan(dy))
-        error("NaN derivative");
+        %error("NaN derivative");
     end
     
     if (dy > 0)

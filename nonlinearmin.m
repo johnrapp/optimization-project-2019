@@ -49,7 +49,7 @@ if isnan(f(x)) || f(x) > f(start)
     error('Bad job of the search!')
 end
 
-plot(xs, ys, '-o');
+%plot(xs, ys, '-o');
 
 %indiana_jones();
 
