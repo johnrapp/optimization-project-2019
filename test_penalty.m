@@ -53,9 +53,10 @@ h_k = {@(x) 1/2*x(1) + x(2) - 1};
 mu = 4;
 start = [0;0];
 
-%for k = 1:5
+for k = 1:5
     q = penalty(f, g_k, h_k, mu);
     [x, No_of_iterations] = nonlinearmin(q, start, "DFP", 1.0e-6, 0)
+    h_k{1}(x)
     
-%    mu = mu * 10;
-%end
+    mu = mu * 5;
+end
