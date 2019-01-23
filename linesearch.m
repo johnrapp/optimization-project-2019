@@ -63,7 +63,7 @@ function dy = derivative(F, x)
         end
     end
     if (isnan(dy))
-        error("NaN derivative");
+        %error("NaN derivative");
     end
     
     if (dy > 0)
