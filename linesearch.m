@@ -14,21 +14,19 @@ end
 function [lambda, No_of_iterations] = armijo(F)
 
     alpha = 2;
-    epsilon = 0.05;
-        
+    epsilon = 0.1;    
     lambda_0 = 1;
-    beta = 1.5;
-    
-    lambda = lambda_0;
 
+    max_iterations = 5000;
+    
     F_0 = F(0);
-    derivative_0 = derivative(F, 0);
+    [lambda, No_of_iterations] = find_suitable_lambda(F, lambda_0, F_0, alpha, max_iterations);
+    
+    derivative_0 = derivative(F, 0, lambda);
 
     T = @(lambda) F_0 + epsilon*lambda*derivative_0;
-
-    No_of_iterations = 0;
     
-    while 1
+    while No_of_iterations <= max_iterations
         No_of_iterations = No_of_iterations + 1;
         
         below_tangent = F(lambda) <= T(lambda);
@@ -39,36 +37,50 @@ function [lambda, No_of_iterations] = armijo(F)
         end
 
         if not(below_tangent)
-            lambda = lambda / beta;
+            lambda = lambda / alpha;
         elseif too_small
-            lambda = lambda * beta;
+            lambda = lambda * alpha;
         end
-        
-        if No_of_iterations > 5000
-            error('Too long time in line search!')
-        end
-
+    end
+    
+    if No_of_iterations == max_iterations
+        error('Too long time in line search!')
     end
 
 end
-function dy = derivative(F, x)
-    df = @(h) (F(x+h) - F(x-h))/(2*h);
+
+function [lambda, No_of_iterations] = find_suitable_lambda(F, lambda, F_0, alpha, max_iterations)
+    No_of_iterations = 0;
     
-    hs = [1.e-60, 1.e-40, 1.e-10, 1.e-0];
-        
-    for k = 1:numel(hs)
-        dy = df(hs(k));
-        if (not(dy == 0))
-            break;
-        end
+    was_bigger = F(lambda) > F_0;
+    
+    while (isnan(F(lambda)) || F(lambda) > F_0) && No_of_iterations <= max_iterations
+       lambda = lambda / alpha;
+       No_of_iterations = No_of_iterations + 1; 
     end
+    
+    if was_bigger
+        return;
+    end
+
+    while F(lambda) <= F_0 && No_of_iterations <= max_iterations
+        lambda = lambda * alpha;
+        No_of_iterations = No_of_iterations + 1;
+    end
+end
+
+function dy = derivative(F, x, suitable_lambda)
+    h_0 = 1e-6;
+    h = suitable_lambda * h_0;
+    
+    dy = (F(x + h) - F(x - h))/(2*h);
+    
     if (isnan(dy))
         error("NaN derivative");
     end
     
     if (dy > 0)
         dy = 0;
-        %error("Positive derivative");
     end
 end
 
