@@ -1,8 +1,7 @@
 function penalty = penalty(f, g_k, h_k, mu)
 
     function q = q(x)
-        q = f(x) + mu * penalty_general(g_k, h_k, x);
-        
+        q = f(x) + mu * alpha(g_k, h_k, x);
     end
     penalty = @q;
 end
@@ -15,8 +14,7 @@ function val = values(g_k, x)
     end
 end
 
-
-function alpha = penalty_general(g_k, h_k, x)
+function alpha = alpha(g_k, h_k, x)
     alpha_g = max(values(g_k, x), 0).^2;
     alpha_h = values(h_k, x).^2;
     
