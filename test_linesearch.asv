@@ -1,6 +1,6 @@
 %% Test 1
 
-a=-10; % try a = 2, a = -2 too, then a = 5 and -5, then a = 10 and -10
+a=-5; % try a = 2, a = -2 too, then a = 5 and -5, then a = 10 and -10
 f=@(x) (1 - 10^a*x).^2;
 
 a_0 = 0;
@@ -9,6 +9,8 @@ b_0 = 1000000;
 x = 0;
 d = 1;
 [lambda, No_of_iterations] = linesearch(f, x, d)
+f(lambda) - 10^(-a)
+
 
 ls = a_0:1:b_0;
 plot(ls, f(x + ls*d))
