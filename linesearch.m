@@ -14,8 +14,8 @@ end
 function [lambda, No_of_iterations] = armijo(F)
 
     alpha = 2;
-    epsilon = 0.1;
-    
+    epsilon = 0.05;
+        
     lambda_0 = 1;
     beta = 1.5;
     
@@ -67,8 +67,8 @@ function dy = derivative(F, x)
     end
     
     if (dy > 0)
-    %    dy = 0;
-        error("Positive derivative");
+        dy = 0;
+        %error("Positive derivative");
     end
 end
 
