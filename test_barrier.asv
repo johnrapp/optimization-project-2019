@@ -9,9 +9,9 @@ epsilon = 1;
 x = [0;0];
 
 for k = 1:5
-    q = barrier(f, g_k, epsilon);
-    epsilon
+    q = penalty(f, g_k, h_k, mu);
     [x, No_of_iterations] = nonlinearmin(q, x, "DFP", 1.0e-6, 0)
+    h_k{1}(x)
     
-    epsilon = epsilon / 10;
+    mu = mu * 5;
 end
