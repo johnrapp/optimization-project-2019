@@ -15,7 +15,7 @@ iterations = 0;
 for k = 1:5 
    q = penalty(f, g_k, h_k, mu);
    
-   [x, No_of_iterations] = nonlinearmin(q, x, 'DFP', 1.0e-6, 0);
+   [x, No_of_iterations] = nonlinearmin(q, x, 'BFGS', 1.0e-6, 0);
    
    mu = mu * 10;
    
@@ -35,11 +35,15 @@ h_k = {@(x) 1/2*x(1) + x(2) - 1};
 mu = 4;
 x = [0;0];
 
+iterations = 0;
 for k = 1:5
     q = penalty(f, g_k, h_k, mu);
-    [x, No_of_iterations] = nonlinearmin(q, x, "DFP", 1.0e-6, 0);
+    [x, No_of_iterations] = nonlinearmin(q, x, "BFGS", 1.0e-6, 0);
     
     mu = mu * 10;
+    
+    iterations = iterations + No_of_iterations;
 end
 x
 f(x)
+iterations
