@@ -45,11 +45,10 @@ while 1
  
     
   
-    if(printout)
-        fprintf('%5.0f %12.4f %12.4f %15.4f %13.4f %8.0f %13.4f\n',No_of_iterations,x(1),stepSize, f(x), norm(d), a, lambda); 
-        for k = 2:numel(x)
-          fprintf('%18.4f\n',x(k));
-        end 
+    if printout
+    fprintf('%5.0f %12.4f %12.4f %15.4f %13.4f %8.0f %13.4f\n',No_of_iterations,x(1),stepSize, f(x), norm(d), a, lambda); 
+    for k = 2:numel(x)
+        fprintf('%18.4f\n',x(k));
     end 
     
     
