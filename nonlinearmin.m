@@ -1,19 +1,13 @@
 function [x, No_of_iterations] = nonlinearmin(f, start, method, tol, printout)
 
-if method == "DFP"
-    update_matrix = @update_DFP;
-elseif method == "BFGS"
-    update_matrix = @update_BFGS;
-end
+update_matrix = update_matrix_fn(method);
 
 max_iterations = 5000;
 n = numel(start);
 x = start;
 No_of_iterations = 0;
 
-if(printout) 
-    disp("iterations     x       stepsize          f(x)       norm(grad)    ls iters    lambda");  
-end
+print_header(printout);
 
 while No_of_iterations < max_iterations
     No_of_iterations = No_of_iterations + 1;
@@ -22,7 +16,7 @@ while No_of_iterations < max_iterations
     D = eye(n);
     for j = 1:n
         d = -D*grad(f, y);
-        [lambda, a] = linesearch(f, y, d);
+        [lambda, ls_iter] = linesearch(f, y, d);
         next_y = y + lambda*d;
         D = update_matrix(f, D, lambda, d, y, next_y);
 
@@ -34,17 +28,9 @@ while No_of_iterations < max_iterations
         break;
     end
     
-    stepSize = norm(x - x_next);
-    x = x_next;
-    xs(No_of_iterations) = x(1);
-    ys(No_of_iterations) = x(2);
+    print_row(printout, No_of_iterations, x, x_next, f, ls_iter, lambda);
     
-    if(printout)
-        fprintf('%5.0f %12.4f %12.4f %15.4f %13.4f %8.0f %13.4f\n',No_of_iterations,x(1),stepSize, f(x), norm(d), a, lambda); 
-        for k = 2:numel(x)
-          fprintf('%18.4f\n',x(k));
-        end 
-    end
+    x = x_next;
     
     if No_of_iterations == max_iterations
         error('Too long time in minimization!')
@@ -56,8 +42,14 @@ if isnan(f(x)) || f(x) > f(start)
     error('Bad job of the search!')
 end
 
-%plot(xs, ys, '-o');
+end
 
+function update_matrix = update_matrix_fn(method)
+    if method == "DFP"
+        update_matrix = @update_DFP;
+    elseif method == "BFGS"
+        update_matrix = @update_BFGS;
+    end
 end
 
 function [p, q] = get_pq(f, lambda, d, y, next_y)
@@ -75,5 +67,29 @@ function D = update_BFGS(f, D, lambda, d, y, next_y)
 end
 
 function stop = should_stop(f, x, x_next, tol)
-    stop = all(abs(x_next - x) <= tol) || abs(f(x_next) - f(x)) < tol;;
+    stop = all(abs(x_next - x) <= tol) || abs(f(x_next) - f(x)) < tol;
+end
+
+function print_header(printout)
+    if (printout) 
+        disp("iterations     x       stepsize          f(x)       norm(grad)    ls iters    lambda");  
+    end
+end
+
+function print_row(printout, No_of_iterations, x, x_next, f, ls_iter, lambda)
+    if (printout)
+        step_size = norm(x - x_next);
+        fprintf('%5.0f %12.4f %12.4f %15.4f %13.4f %8.0f %13.4f\n', ...
+            No_of_iterations, ...
+            x(1), ...
+            step_size, ...
+            f(x), ...
+            norm(grad(f,x)), ...
+            ls_iter, ...
+            lambda ...
+        );
+        for k = 2:numel(x)
+          fprintf('%18.4f\n', x(k));
+        end 
+    end
 end
