@@ -1,12 +1,12 @@
 -- Testa på Rosenbrock (check!)
--- nonlinearmin barrier (check!)
--- Deras barrierexempel
--- Exercise 9.3
--- Exercise 9.5
+-- nonlinearmin penalty (check!)
+-- Deras barrierexempel (check!)
+-- Exercise 9.3 (check!)
+-- Exercise 9.5 (check!)
 
 -- Skriva rapport
 
--- Printout i nonlinearmin
+-- Printout i nonlinearmin (check!)
 -- Cleana upp tester
 
 Kanske
