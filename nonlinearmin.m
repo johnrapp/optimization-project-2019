@@ -1,57 +1,57 @@
 function [x, No_of_iterations] = nonlinearmin(f, start, method, tol, printout)
 
-update_matrix = update_matrix_fn(method);
+    update_matrix = update_matrix_fn(method);
 
-max_iterations = 500;
-n = numel(start);
-x = start;
-No_of_iterations = 0;
+    max_iterations = 500;
+    n = numel(start);
+    x = start;
+    No_of_iterations = 0;
 
-print_header(printout);
+    print_header(printout);
 
-while No_of_iterations < max_iterations
-    No_of_iterations = No_of_iterations + 1;
+    while No_of_iterations < max_iterations
+        No_of_iterations = No_of_iterations + 1;
 
-    y = x;
-    D = eye(n);
-    for j = 1:n
-        gf = grad(f, y);
-            
-        if grad_too_small(gf, tol)
-            x = y;
-            return;
+        y = x;
+        D = eye(n);
+        for j = 1:n
+            gf = grad(f, y);
+
+            if grad_too_small(gf, tol)
+                x = y;
+                return;
+            end
+
+            d = -D * gf;
+            [lambda, ls_iter] = linesearch(f, y, d);
+            next_y = y + lambda*d;
+
+            if should_stop(f, y, next_y, tol)
+                break;
+            end
+
+            D = update_matrix(f, D, lambda, d, y, next_y);
+            y = next_y;
         end
-        
-        d = -D * gf;
-        [lambda, ls_iter] = linesearch(f, y, d);
-        next_y = y + lambda*d;
-        
-        if should_stop(f, y, next_y, tol)
+        x_next = next_y;
+
+        print_row(printout, No_of_iterations, x, x_next, f, gf, ls_iter, lambda);
+
+        if should_stop(f, x, x_next, tol)
             break;
         end
-        
-        D = update_matrix(f, D, lambda, d, y, next_y);
-        y = next_y;
-    end
-    x_next = next_y;
-    
-    print_row(printout, No_of_iterations, x, x_next, f, gf, ls_iter, lambda);
-    
-    if should_stop(f, x, x_next, tol)
-        break;
-    end
-    
-    x = x_next;
-    
-    if No_of_iterations == max_iterations
-        error('Too long time in minimization!')
-    end
-end
 
-x = x_next;
-if isnan(f(x)) || f(x) > f(start)
-    error('Bad job of the search!')
-end
+        x = x_next;
+
+        if No_of_iterations == max_iterations
+            error('Too long time in minimization!')
+        end
+    end
+
+    x = x_next;
+    if isnan(f(x)) || f(x) > f(start)
+        error('Bad job of the unlinear search!')
+    end
 
 end
 
