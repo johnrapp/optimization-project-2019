@@ -1,25 +1,21 @@
 function [x, No_of_iterations] = nonlinearmin(f, start, method, tol, printout)
 
-%TODO printout DOn!
-
 if method == "DFP"
     update_matrix = @update_DFP;
 elseif method == "BFGS"
     update_matrix = @update_BFGS;
 end
 
-if printout == 1
-end
-
+max_iterations = 5000;
 n = numel(start);
-
 x = start;
-
 No_of_iterations = 0;
+
 if(printout) 
     disp("iterations     x       stepsize          f(x)       norm(grad)    ls iters    lambda");  
-end 
-while 1
+end
+
+while No_of_iterations < max_iterations
     No_of_iterations = No_of_iterations + 1;
 
     y = x;
@@ -42,20 +38,15 @@ while 1
     x = x_next;
     xs(No_of_iterations) = x(1);
     ys(No_of_iterations) = x(2);
- 
     
-  
     if(printout)
         fprintf('%5.0f %12.4f %12.4f %15.4f %13.4f %8.0f %13.4f\n',No_of_iterations,x(1),stepSize, f(x), norm(d), a, lambda); 
         for k = 2:numel(x)
           fprintf('%18.4f\n',x(k));
         end 
-    end 
+    end
     
-    
-    
-    
-    if No_of_iterations > 5000
+    if No_of_iterations == max_iterations
         error('Too long time in minimization!')
     end
 end
@@ -66,8 +57,6 @@ if isnan(f(x)) || f(x) > f(start)
 end
 
 %plot(xs, ys, '-o');
-
-%indiana_jones();
 
 end
 

@@ -26,7 +26,7 @@ function [lambda, No_of_iterations] = armijo(F)
 
     T = @(lambda) F_0 + epsilon*lambda*derivative_0;
     
-    while No_of_iterations <= max_iterations
+    while No_of_iterations < max_iterations
         No_of_iterations = No_of_iterations + 1;
         
         below_tangent = F(lambda) <= T(lambda);
@@ -74,10 +74,6 @@ function dy = derivative(F, x, suitable_lambda)
     h = suitable_lambda * h_0;
     
     dy = (F(x + h) - F(x - h))/(2*h);
-    
-    if (isnan(dy))
-        %error("NaN derivative");
-    end
     
     if (dy > 0)
         dy = 0;
