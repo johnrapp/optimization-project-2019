@@ -1,8 +1,8 @@
 function [lambda, No_of_iterations] = linesearch(func, x, d)
 
-    f = @(lambda) func(x + lambda .* d);
+    F = @(lambda) func(x + lambda .* d);
     
-    [lambda, No_of_iterations] = armijo(f);
+    [lambda, No_of_iterations] = armijo(F);
     
     if isnan(func(x+lambda*d))
         error('Line search is NaN!')
@@ -17,7 +17,7 @@ function [lambda, No_of_iterations] = armijo(F)
     epsilon = 0.1;    
     lambda_0 = 1;
 
-    max_iterations = 5000;
+    max_iterations = 500;
     
     F_0 = F(0);
     [lambda, No_of_iterations] = find_suitable_lambda(F, lambda_0, F_0, alpha, max_iterations);
@@ -54,7 +54,7 @@ function [lambda, No_of_iterations] = find_suitable_lambda(F, lambda, F_0, alpha
     
     was_bigger = F(lambda) > F_0;
     
-    while (isnan(F(lambda)) || F(lambda) > F_0) && No_of_iterations <= max_iterations
+    while (isnan(F(lambda)) || F(lambda) > F_0) && No_of_iterations < max_iterations
        lambda = lambda / alpha;
        No_of_iterations = No_of_iterations + 1; 
     end
@@ -63,7 +63,7 @@ function [lambda, No_of_iterations] = find_suitable_lambda(F, lambda, F_0, alpha
         return;
     end
 
-    while F(lambda) <= F_0 && No_of_iterations <= max_iterations
+    while F(lambda) <= F_0 && No_of_iterations < max_iterations
         lambda = lambda * alpha;
         No_of_iterations = No_of_iterations + 1;
     end
