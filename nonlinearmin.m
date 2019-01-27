@@ -87,8 +87,13 @@ end
 
 function stop = grad_too_small(gf, tol)
     stop = norm(gf) < tol;
+    
     if stop
         disp("Gradient too small!");
+    end
+    
+    if any(isnan(gf))
+        error("Gradient is NaN");
     end
 end
 function stop = should_stop(f, x, x_next, tol)

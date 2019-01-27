@@ -67,6 +67,11 @@ function [lambda, No_of_iterations] = find_suitable_lambda(F, lambda, F_0, alpha
         lambda = lambda * alpha;
         No_of_iterations = No_of_iterations + 1;
     end
+    
+    
+    if No_of_iterations == max_iterations
+        error('Too long time in line search!')
+    end
 end
 
 function dy = derivative(F, x, suitable_lambda)
