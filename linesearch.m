@@ -63,7 +63,7 @@ function [lambda, No_of_iterations] = find_suitable_lambda(F, lambda, F_0, alpha
         return;
     end
 
-    while F(lambda) <= F_0 && No_of_iterations < max_iterations
+    while F(lambda) < F_0 && No_of_iterations < max_iterations
         lambda = lambda * alpha;
         No_of_iterations = No_of_iterations + 1;
     end

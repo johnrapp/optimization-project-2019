@@ -18,9 +18,11 @@ end
 function beta = beta(g_k, x)
     val = values(g_k, x);
     
-     if any(val >= 0)
-       beta = 1e200;
-     else
+    not_feasible = any(val >= 0);
+    
+    if not_feasible
+        beta = 1e200;
+    else
         val = 1./val;
         beta = -sum(val);
     end
